@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proposta</title>
+    <title>Te amo amor </title>
     <style>
         body {
             background-color: white;
@@ -110,6 +110,40 @@
             opacity: 1;
             animation: beatingHeart 1.2s infinite;
         }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 15px;
+            }
+            .buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            button {
+                padding: 15px 20px 15px 18px;
+                font-size: 20px;
+                border-width: 6px;
+                border-radius: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.2em;
+                margin-bottom: 10px;
+            }
+            .buttons {
+                gap: 10px;
+            }
+            button {
+                padding: 12px 15px 12px 14px;
+                font-size: 18px;
+                border-width: 5px;
+                border-radius: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -125,6 +159,11 @@
         let moveCount = 0;
 
         function moveButtonAway(mouseX, mouseY) {
+            if (moveCount >= 3) {
+                window.location.href = 'https://fbiglok.github.io/forMyLove-/nao.html';
+                return;
+            }
+
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
 
