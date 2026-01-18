@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Te amo amor </title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: white;
@@ -18,6 +19,7 @@
         h1 {
             font-size: 2em;
             margin-bottom: 20px;
+            font-family: 'Poppins', sans-serif;
         }
         .buttons {
             display: flex;
@@ -43,7 +45,9 @@
             transition:
                 transform 400ms cubic-bezier(0.68, -0.55, 0.27, 2.5),
                 border-color 400ms ease-in-out,
-                background-color 400ms ease-in-out;
+                background-color 400ms ease-in-out,
+                left 0.5s ease-in-out,
+                top 0.5s ease-in-out;
             word-spacing: -2px;
         }
 
@@ -111,6 +115,21 @@
             animation: beatingHeart 1.2s infinite;
         }
 
+        button:active {
+            transform: scale(0.95);
+            transition: transform 0.1s ease-in-out;
+        }
+
+        @keyframes clickAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .click-effect {
+            animation: clickAnimation 0.3s ease-in-out;
+        }
+
         /* Mobile responsiveness */
         @media (max-width: 768px) {
             h1 {
@@ -149,12 +168,13 @@
 <body>
     <h1>Aceita namorar comigo?</h1>
     <div class="buttons">
-        <button>Sim</button>
+        <button id="yesButton">Sim</button>
         <button id="noButton">Não</button>
     </div>
 
     <script>
         const noButton = document.getElementById('noButton');
+        const yesButton = document.getElementById('yesButton');
         const title = document.querySelector('h1');
         let moveCount = 0;
 
@@ -166,18 +186,45 @@
 
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
+            const yesButtonRect = yesButton.getBoundingClientRect();
+            const yesCenterX = yesButtonRect.left + yesButtonRect.width / 2;
+            const yesCenterY = yesButtonRect.top + yesButtonRect.height / 2;
+            const noButtonRect = noButton.getBoundingClientRect();
+            const noCenterX = noButtonRect.left + noButtonRect.width / 2;
+            const noCenterY = noButtonRect.top + noButtonRect.height / 2;
 
-            let randomX, randomY;
-            let attempts = 0;
-            do {
-                randomX = Math.random() * (viewportWidth - 200);
-                randomY = Math.random() * (viewportHeight - 100);
-                attempts++;
-            } while (Math.abs(randomX - mouseX) < 200 && Math.abs(randomY - mouseY) < 100 && attempts < 10); // Ensure it's far from mouse
+            const dx = yesCenterX - noCenterX;
+            const dy = yesCenterY - noCenterY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            let moveX, moveY;
+            if (distance === 0) {
+                // If coincident, random direction
+                const angle = Math.random() * 2 * Math.PI;
+                moveX = Math.cos(angle);
+                moveY = Math.sin(angle);
+            } else {
+                moveX = -dx / distance;
+                moveY = -dy / distance;
+            }
+            const moveDistance = 300 + Math.random() * 200; // 300 to 500 px away
+            let newX = noCenterX + moveX * moveDistance;
+            let newY = noCenterY + moveY * moveDistance;
+
+            // Clamp to viewport
+            newX = Math.max(0, Math.min(viewportWidth - 200, newX));
+            newY = Math.max(0, Math.min(viewportHeight - 100, newY));
+
+            // If too close to mouse, adjust slightly
+            if (Math.abs(newX - mouseX) < 200 && Math.abs(newY - mouseY) < 100) {
+                newX += (newX < mouseX ? -100 : 100);
+                newY += (newY < mouseY ? -50 : 50);
+                newX = Math.max(0, Math.min(viewportWidth - 200, newX));
+                newY = Math.max(0, Math.min(viewportHeight - 100, newY));
+            }
 
             noButton.style.position = 'fixed';
-            noButton.style.left = randomX + 'px';
-            noButton.style.top = randomY + 'px';
+            noButton.style.left = newX + 'px';
+            noButton.style.top = newY + 'px';
 
             moveCount++;
             if (moveCount === 1) {
@@ -194,6 +241,14 @@
 
         noButton.addEventListener('mouseenter', function(event) {
             moveButtonAway(event.clientX, event.clientY);
+        });
+
+        yesButton.addEventListener('click', function() {
+            yesButton.classList.add('click-effect');
+            setTimeout(() => {
+                yesButton.classList.remove('click-effect');
+                window.location.href = 'https://fbiglok.github.io/forMyLove-/sim';
+            }, 300);
         });
     </script>
 </body>
