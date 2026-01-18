@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .buttons {
+            display: flex;
+            gap: 20px;
+            position: relative;
+        }
+        button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 25px 20px 22px;
+            box-shadow: rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+            background-color: #e8e8e8;
+            border-color: #ffe2e2;
+            border-style: solid;
+            border-width: 9px;
+            border-radius: 35px;
+            font-size: 25px;
+            cursor: pointer;
+            font-weight: 900;
+            color: rgb(134, 124, 124);
+            font-family: monospace;
+            transition:
+                transform 400ms cubic-bezier(0.68, -0.55, 0.27, 2.5),
+                border-color 400ms ease-in-out,
+                background-color 400ms ease-in-out;
+            word-spacing: -2px;
+        }
+
+        @keyframes movingBorders {
+            0% {
+                border-color: #fce4e4;
+            }
+
+            50% {
+                border-color: #ffd8d8;
+            }
+
+            90% {
+                border-color: #fce4e4;
+            }
+        }
+
+        button:hover {
+            background-color: #eee;
+            transform: scale(105%);
+            animation: movingBorders 3s infinite;
+        }
+
+        button svg {
+            margin-right: 11px;
+            fill: rgb(255, 110, 110);
+            transition: opacity 100ms ease-in-out;
+        }
+
+        .filled {
+            position: absolute;
+            opacity: 0;
+            top: 20px;
+            left: 22px;
+        }
+
+        @keyframes beatingHeart {
+            0% {
+                transform: scale(1);
+            }
+
+            15% {
+                transform: scale(1.15);
+            }
+
+            30% {
+                transform: scale(1);
+            }
+
+            45% {
+                transform: scale(1.15);
+            }
+
+            60% {
+                transform: scale(1);
+            }
+        }
+
+        button:hover .empty {
+            opacity: 0;
+        }
+
+        button:hover .filled {
+            opacity: 1;
+            animation: beatingHeart 1.2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <h1>Aceita namorar comigo?</h1>
+    <div class="buttons">
+        <button>Sim</button>
+        <button id="noButton">Não</button>
+    </div>
+
+    <script>
+        const noButton = document.getElementById('noButton');
+        const title = document.querySelector('h1');
+        let moveCount = 0;
+
+        function moveButtonAway(mouseX, mouseY) {
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+
+            let randomX, randomY;
+            let attempts = 0;
+            do {
+                randomX = Math.random() * (viewportWidth - 200);
+                randomY = Math.random() * (viewportHeight - 100);
+                attempts++;
+            } while (Math.abs(randomX - mouseX) < 200 && Math.abs(randomY - mouseY) < 100 && attempts < 10); // Ensure it's far from mouse
+
+            noButton.style.position = 'fixed';
+            noButton.style.left = randomX + 'px';
+            noButton.style.top = randomY + 'px';
+
+            moveCount++;
+            if (moveCount === 1) {
+                title.textContent = 'Pq voce esta tentando clicar em nao? :(';
+            } else if (moveCount === 3) {
+                title.textContent = 'VOCE ME ODEIA E ISSO???';
+            }
+        }
+
+        noButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            moveButtonAway(event.clientX, event.clientY);
+        });
+
+        noButton.addEventListener('mouseenter', function(event) {
+            moveButtonAway(event.clientX, event.clientY);
+        });
+    </script>
+</body>
+</html>
